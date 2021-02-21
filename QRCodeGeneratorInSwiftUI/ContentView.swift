@@ -12,6 +12,7 @@ struct ContentView: View {
     @State private var qrCode: QRCode?
     
     private let qrCodeGenerator = QRCodeGenerator()
+    @ObservedObject private var imageSaver = ImageSaver()
     
     var body: some View {
         NavigationView {
@@ -43,6 +44,14 @@ struct ContentView: View {
                 }
                 .padding()
                 .navigationBarTitle("QR Code")
+                .navigationBarItems(trailing: Button(action: {
+                    assert(qrCode != nil, "Cannot save nil QR Code image")
+                    imageSaver.saveImage(qrCode!.uiImage)
+                }, label: {
+                    Image(systemName: "squared.and.arrow.down")
+                })
+                .disabled(qrCode == nil)
+                )
             }
         }
     }
